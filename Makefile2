@@ -12,19 +12,19 @@ SRCS := $(wildcard $(SRC_DIR)/*.cpp)
 OBJS := $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRCS))
 
 # Target executable
+TARGET := test
 
 ifeq ($(UC),1)
-    OBJS := $(filter-out $(OBJ_DIR)/unit_tests.o, $(OBJS))
-	TARGET := out
+    # Compile the main.cpp file instead of unit_tests.cpp
+    SRCS := $(filter-out $(SRC_DIR)/unit_tests.cpp, $(SRCS))
+    INC_DIR := $(filter-out inc/acutest.h, $(INC_DIR))
 else
     # Include unit_tests.cpp
-    OBJS := $(filter-out $(OBJ_DIR)/main.o, $(OBJS))
-	TARGET := test
+    SRCS := $(filter-out $(SRC_DIR)/main.cpp, $(SRCS))
 endif
 
 # Compile and link
 $(TARGET): $(OBJS)
-	rm -f $(TARGET)
 	$(CXX) $(CXXFLAGS) -I$(INC_DIR) $^ -o $@
 
 # Compile source files to object files
@@ -32,9 +32,15 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 	@mkdir -p $(OBJ_DIR)
 	$(CXX) $(CXXFLAGS) -I$(INC_DIR) -I$(dir $<) -c $< -o $@
 
+test:
+	
 # Clean rule
 clean:
 	rm -rf $(OBJ_DIR) $(TARGET)
 
 .PHONY: clean
 
+
+#$(filter-out $(SRC_DIR)/unit_tests.cpp, $(SRCS))
+#SRCS += $(SRC_DIR)/main.cpp
+#INC_DIR := $(filter-out inc/acutest.h, $(INC_DIR))

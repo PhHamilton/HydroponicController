@@ -1,23 +1,23 @@
 #include "gpio.h"
 #include <stdint.h>
 
-GPIO::GPIO(uint8_t pinNumber) : _fileManager(&_fileHandler)
+GPIO::GPIO(const char* pinNumber) : _fileManager(&_fileHandler)
 {
-	_pinNumber = pinNumber;
-
+	sprintf(_filePath, "%s/gpio%s", GPIO_PATH, pinNumber);
 }
 
 uint8_t GPIO::Get()
 {
-	return 0; 
+	char storedValuePath[PATH_MAX];
+	sprintf(storedValuePath, "%s/value", _filePath);
+	return _fileManager.ReadFile(storedValuePath);
 }
 
 uint8_t GPIO::Set(GPIO_MODE mode)
 {
 	const char* GPIOModeString = (mode == INPUT) ? "in" : "out";
 
-	uint8_t rc = _fileManager.WriteToFile(GPIO_PATH, GPIOModeString);
-	return 0;
+	return _fileManager.WriteToFile(GPIO_PATH, GPIOModeString);
 }
 
 uint8_t GPIO::Toggle()

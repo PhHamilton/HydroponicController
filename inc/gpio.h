@@ -1,10 +1,11 @@
 #ifndef GPIO_H
 #define GPIO_H
 #include <stdint.h>
+#include <limits.h>
 #include "fileManager.h"
 #include "fileHandler.h"
 
-#define GPIO_PATH "/sys/class/gpio/"
+#define GPIO_PATH "/sys/class/gpio"
 
 typedef enum
 {
@@ -31,7 +32,7 @@ typedef enum
 class GPIO
 {
 	public:
-		GPIO(uint8_t pinNumber);
+		GPIO(const char* pinNumber);
 		uint8_t Get();
 		uint8_t Set(GPIO_MODE mode);
 		uint8_t Toggle();
@@ -42,7 +43,7 @@ class GPIO
 		uint8_t _export();
 		uint8_t _debounceTime;
 		uint8_t _pinNumber;
-		
+		char _filePath[PATH_MAX];		
 		FileManager _fileManager;
 		FileHandler _fileHandler;		
 };
