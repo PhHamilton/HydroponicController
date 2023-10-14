@@ -17,7 +17,7 @@ uint8_t GPIO::Set(GPIO_MODE mode)
 {
 	const char* GPIOModeString = (mode == INPUT) ? "in" : "out";
 
-	return _fileManager.WriteToFile(GPIO_PATH, GPIOModeString);
+	return _fileHandler.WriteToFile(GPIO_PATH, GPIOModeString);
 }
 
 uint8_t GPIO::Toggle()

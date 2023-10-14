@@ -44,8 +44,9 @@ class GPIO
 		uint8_t _debounceTime;
 		uint8_t _pinNumber;
 		char _filePath[PATH_MAX];		
-		FileManager _fileManager;
-		FileHandler _fileHandler;		
+
+		FileHandler _fileHandler;
+		FileManager _fileManager; 
 };
 
 #endif
