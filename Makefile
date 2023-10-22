@@ -11,6 +11,8 @@ OBJ_DIR := obj
 SRCS := $(wildcard $(SRC_DIR)/*.cpp)
 OBJS := $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRCS))
 
+HEADERS := $(wildcard $(INC_DIR)/*.h)
+
 # Target executable
 
 ifeq ($(UC),1)
@@ -28,7 +30,7 @@ $(TARGET): $(OBJS)
 	$(CXX) $(CXXFLAGS) -I$(INC_DIR) $^ -o $@
 
 # Compile source files to object files
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp $(HEADERS)
 	@mkdir -p $(OBJ_DIR)
 	$(CXX) $(CXXFLAGS) -I$(INC_DIR) -I$(dir $<) -c $< -o $@
 

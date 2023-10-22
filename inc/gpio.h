@@ -1,10 +1,11 @@
 #ifndef GPIO_H
 #define GPIO_H
 #include <stdint.h>
-#include <limits.h>
 #include "fileManager.h"
 #include "fileHandler.h"
+#include "stringFormatter.h"
 
+#define PATH_MAX 256;
 #define GPIO_PATH "/sys/class/gpio"
 
 typedef enum
@@ -33,20 +34,25 @@ class GPIO
 {
 	public:
 		GPIO(const char* pinNumber);
-		uint8_t Get();
+		const char* Get();
 		uint8_t Set(GPIO_MODE mode);
+		uint8_t TurnOn();
+		uint8_t TurnOff();
 		uint8_t Toggle();
 		uint8_t EnableSoftwareDebounce(uint8_t debounceTime);
+		~GPIO() {_unexport(_pinNumber);}
 	private:
-		uint8_t _write();
+		uint8_t _write(const char* fileName, const char* value);
 		uint8_t _read();
-		uint8_t _export();
+		uint8_t _export(const char *pinNumber);
+		uint8_t _unexport(const char *pinNumber);
 		uint8_t _debounceTime;
-		uint8_t _pinNumber;
-		char _filePath[PATH_MAX];		
+		const char* _pinNumber;
+		char* _filePath = new char[MAX_STRING_SIZE];		
 
 		FileHandler _fileHandler;
 		FileManager _fileManager; 
+		StringFormatter _formatter;
 };
 
 #endif

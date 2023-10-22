@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include "acutest.h"
 #include "fileHandler.h"
+#include "stringFormatter.h"
+#include "dataTypeConverter.h"
 
 const char* testFilePath = "utility";
 
@@ -72,10 +74,42 @@ void test_writeToFile()
 	fileHandler.WriteToFile(filePath, "in");
 }
 
+void test_addStrings()
+{
+	StringFormatter formatter; 
+	const char* string1 = "abc";
+	const char* string2 = "def";
+
+	const char* result = formatter.AddTwoStrings(string1, string2);
+	const char* expected = "abcdef";
+	TEST_CHECK_(strcmp(result, expected) == 0, "Adding strings, %s and %s, expected %s, actual: %s", string1, string2, expected, result);
+
+	const char* result2 = formatter.AddTwoStrings(string2, string1);
+	const char* expected2 = "defabc";
+	TEST_CHECK_(strcmp(result2, expected2) == 0, "Adding strings, %s and %s, expected %s, actual: %s", string2, string1, expected2, result2);
+	TEST_CHECK_(strcmp(result, expected) == 0, "Checking previous test!, %s and %s, expected %s, actual: %s", string1, string2, expected, result);
+}
+
+void test_typeConverter()
+{
+	DataTypeConverter converter;
+	const char* testValues[7] = {"1", "10", "100", "1000", "-1", "500000", "1000000000"};
+	int32_t expected[7] = {1, 10, 100, 1000, -1, 500000, 1000000000};
+	for(int i = 0; i < 7; i++)
+	{
+		int32_t actual = converter.ConvertStringToInt(testValues[i], strlen(testValues[i])); 
+		TEST_CHECK_(expected[i] == actual, "Testing TypeConverter, Expected: %i, Actual: %i", expected[i], actual);
+		char* reverted = converter.ConvertIntToString(expected[i]);
+		TEST_CHECK_(strcmp(reverted, testValues[i]) == 0, "Testing TypeConverter, Expected: %s, Actual: %s", testValues[i], reverted);
+	}
+
+}
 TEST_LIST = 
 {
 	{"Reading an non-existing file", test_readNonExistingFile},  
 	{"Reading an existing file", test_readExistingFile},  
-	{"Writing to  an existing file", test_writeToFile},  
+	{"Writing to an existing file", test_writeToFile},  
+	{"Adding two strings", test_addStrings},  
+	{"Converting string to int", test_typeConverter},  
 	{0}
 };
