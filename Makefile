@@ -21,6 +21,7 @@ ifeq ($(UC),1)
 else
     # Include unit_tests.cpp
     OBJS := $(filter-out $(OBJ_DIR)/main.o, $(OBJS))
+    OBJS := $(filter-out $(OBJ_DIR)/ads1015.o, $(OBJS))
 	TARGET := test
 endif
 

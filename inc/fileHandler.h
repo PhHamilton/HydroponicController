@@ -6,6 +6,8 @@
 
 #define BUFF_SIZE 50
 
+#define READ "rb"
+#define WRITE "w"
 typedef enum
 {
 	OK,
@@ -24,6 +26,8 @@ class FileHandler : public FileHandlerInterface
 		virtual uint8_t ReadFile(const char* filePath) override;
 		virtual char* GetFileContent() override;
 		virtual uint8_t WriteToFile(const char* filePath, const char *data) override;
+		virtual uint8_t OpenFile(const char* filePath, const char* fileAction) override;
+		virtual uint8_t CloseFile() override;
 
 	private: 
 		FILE *_filePointer = NULL;

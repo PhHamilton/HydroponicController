@@ -10,6 +10,8 @@ class FileManager
 		uint8_t ReadFile(const char* filePath);
 		const char* GetFileContent(); 
 		uint8_t WriteToFile(const char* filePath, const char* data);
+		uint8_t Open(const char* filePath, const char* fileAction);
+		uint8_t Close();
 	private: 
 		FileHandlerInterface *_fileHandler;
 };

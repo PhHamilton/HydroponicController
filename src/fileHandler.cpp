@@ -1,7 +1,5 @@
 #include "fileHandler.h"
 #include <string.h>
-#define READ "rb"
-#define WRITE "w"
 #define VALUES_TO_READ 1
 #define VALUES_TO_WRITE 1
 
@@ -11,7 +9,7 @@ FileHandler::FileHandler()
 
 uint8_t FileHandler::ReadFile(const char* filePath)
 {
-	uint8_t rc = _openFile(filePath, READ);
+	uint8_t rc = OpenFile(filePath, READ);
 
 	if(rc != OK) return rc; 
 	
@@ -19,7 +17,7 @@ uint8_t FileHandler::ReadFile(const char* filePath)
 
 	if(rc != OK) return rc;
 
-	_closeFile();
+	CloseFile();
 	return OK;
 }
 
@@ -30,7 +28,7 @@ char * FileHandler::GetFileContent()
 
 uint8_t FileHandler::WriteToFile(const char* filePath, const char* data)
 {
-	uint8_t rc = _openFile(filePath, WRITE);
+	uint8_t rc = OpenFile(filePath, WRITE);
 
 	if(rc != OK) return rc; 
 	
@@ -38,8 +36,17 @@ uint8_t FileHandler::WriteToFile(const char* filePath, const char* data)
 
 	if(rc != OK) return rc;
 
-	_closeFile();
+	CloseFile();
 	return OK;
+}
+uint8_t FileHandler::OpenFile(const char* filePath, const char* fileAction)
+{
+	return _openFile(filePath, fileAction);
+}
+
+uint8_t FileHandler::CloseFile()
+{
+	return _closeFile();
 }
 
 uint8_t FileHandler::_writeContent(const char *data)
