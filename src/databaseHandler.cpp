@@ -30,10 +30,10 @@ uint8_t PostgresHandler::ProbeDatabase(const char *databaseName)
 {
 	const char* query = _formatter.AddTwoStrings((const char*)"SELECT 1 FROM pg_database WHERE datname = ", databaseName);
 	_res = _sendQuery(query);
-
-	if(PQstatus(_res) != PGRES_TUPLES_OK)
+	
+	if(PQresultStatus(_res) != PGRES_TUPLES_OK)
 	{
-		const char* errorMessage = _formatter.AddThreeStrings((const char*)"Failed to probe database: ", PQerrorMessage, '\n');
+		const char* errorMessage = _formatter.AddThreeStrings((const char*)"Failed to probe database: ", (const char*)PQerrorMessage, "\n");
 		_printErrorAndExit(errorMessage);
 		return 2;
 	}	
@@ -48,7 +48,7 @@ uint8_t PostgresHandler::ProbeDatabase(const char *databaseName)
 		PQclear(_res);
 		const char* query = _formatter.AddTwoStrings("CREATE DATABASE ", databaseName);
 		_res = _sendQuery(query);
-		const char* errorMessage = _formatter.AddThreeStrings("Database creation failed: ", PQerrorMessage, '\n');
+		const char* errorMessage = _formatter.AddThreeStrings("Database creation failed: ", (const char*)PQerrorMessage, "\n");
 		PQclear(_res);
 		return _checkConnectionResultStatus(errorMessage);
 	}
@@ -79,7 +79,7 @@ uint8_t PostgresHandler::_checkConnectionResultStatus(const char* errorMessage)
 
 void PostgresHandler::_printErrorAndExit(const char* errorMessage)
 {
-	const char* msg = _formatter.AddThreeStrings(errorMessage, (const char*)PQerrorMessage, '\n');
+	const char* msg = _formatter.AddThreeStrings(errorMessage, (const char*)PQerrorMessage, "\n");
 	fprintf(stderr, msg);
 	_exit();
 }
