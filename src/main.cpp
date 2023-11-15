@@ -10,7 +10,7 @@
 #include <fcntl.h>
 #include <sys/ioctl.h>
 #include <linux/i2c-dev.h>
-
+#include "ads1015.h"
 #define PWM_LED "0"
 #define RED_LED "17"
 #define I2C_ADDR 0x48
@@ -18,13 +18,14 @@
 
 int main(int argc, char** argv)
 {
-	I2CHandler i2cHandler(I2C_ADDR, I2C_DEVICE);
-	i2cHandler.Initialize();
+	ADS1015 ads1015(I2C_ADDR, I2C_DEVICE);
 
-	uint8_t buf[2];
-	buf[0] = 0x01;
-	i2cHandler.Write(buf, 1);
-	i2cHandler.Read(buf, 2);
-	printf("Buffer values: 0x%02X%02X\n", buf[0], buf[1]);
+	while(1)
+	{
+        uint16_t val = ads1015.Read(0);
+		printf("Read value: %i, Voltage: %f\n", val, (float)val * 3 / 1000.0);
+		usleep(500000);
+	}
+
 	return 0;
 }

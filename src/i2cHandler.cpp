@@ -11,7 +11,7 @@ I2CHandler::I2CHandler(uint8_t deviceAddress, const char* I2CAdapter) : _fileMan
 	_i2cDevice = _formatter.AddThreeStrings(I2C_PATH, "/", I2CAdapter);
 }
 
-uint8_t I2CHandler::Initialize()
+uint8_t I2CHandler::Open()
 {
 	_openI2CBus();
 	_setSlaveAddress();	
@@ -44,6 +44,12 @@ uint16_t I2CHandler::ReadRegister(uint8_t reg, uint8_t dataSize)
 {
 	return 0;
 }
+
+uint8_t I2CHandler::Close()
+{
+	close(_i2cFile);
+	return 0;
+}
 	
 int8_t I2CHandler::_openI2CBus()
 {
@@ -67,5 +73,5 @@ int8_t I2CHandler::_setSlaveAddress()
 
 I2CHandler::~I2CHandler()
 {
-	close(_i2cFile);
+	Close();
 }

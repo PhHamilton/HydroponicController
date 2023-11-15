@@ -13,10 +13,12 @@ class I2CHandler
 {
 	public:
 		I2CHandler(uint8_t deviceAddress, const char* I2CAdapter);
-		uint8_t Initialize();
+		uint8_t Open();
 		uint8_t Write(uint8_t data[], uint8_t dataSize);
+		uint8_t WriteToRegister(uint8_t reg, uint8_t data[], uint8_t dataSize);
 		uint8_t Read(uint8_t buf[], uint8_t dataSize);
 		uint16_t ReadRegister(uint8_t reg, uint8_t dataSize);
+		uint8_t Close();
 		~I2CHandler();
 	private: 
 		int8_t _openI2CBus();

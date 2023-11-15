@@ -13,16 +13,30 @@ OBJS := $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRCS))
 
 HEADERS := $(wildcard $(INC_DIR)/*.h)
 
-# Target executable
+# Default target is "out"
+TARGET := out
 
-ifeq ($(UC),1)
-    OBJS := $(filter-out $(OBJ_DIR)/unit_tests.o, $(OBJS))
-	TARGET := out
-else
-    # Include unit_tests.cpp
+# If "test" is specified as a make target, update the target and object files
+ifeq ($(MAKECMDGOALS),test)
+    TARGET := test
     OBJS := $(filter-out $(OBJ_DIR)/main.o, $(OBJS))
     OBJS := $(filter-out $(OBJ_DIR)/ads1015.o, $(OBJS))
-	TARGET := test
+    OBJS := $(filter-out $(OBJ_DIR)/i2cHandler.o, $(OBJS))
+    OBJS := $(filter-out $(OBJ_DIR)/waterlevel.o, $(OBJS))
+endif
+
+# If "uc" is specified as a make target, update the target and object files
+ifeq ($(MAKECMDGOALS),uc)
+    TARGET := out
+    OBJS := $(filter-out $(OBJ_DIR)/unit_tests.o, $(OBJS))
+    OBJS := $(filter-out $(OBJ_DIR)/waterlevel.o, $(OBJS))
+endif
+
+ifeq ($(MAKECMDGOALS), waterlevel)
+    TARGET := waterlevel
+    OBJS := $(filter-out $(OBJ_DIR)/unit_tests.o, $(OBJS))
+    OBJS := $(filter-out $(OBJ_DIR)/main.o, $(OBJS))
+	CXXFLAGS += -pthread
 endif
 
 # Compile and link
